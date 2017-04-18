@@ -56,7 +56,7 @@ func deploy(c *cli.Context) {
 
 	// Connect to docker.
 	fmt.Println("==>  docker: connecting to docker remote api")
-	dock, err := docker.NewDocker(app)
+	dock, err := docker.NewDocker(app.Config().Docker)
 	if err != nil {
 		rerr(c, err)
 		return
