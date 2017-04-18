@@ -1,11 +1,16 @@
 package config
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 
 	yaml "gopkg.in/yaml.v2"
+)
+
+var (
+	ErrNoShedFile = errors.New("No shed.yml or .shed.yml file found")
 )
 
 // Docker represents a docker config section.
@@ -46,11 +51,18 @@ func NewConfig(args ...string) (Config, error) {
 		return Config{}, err
 	}
 
-	file := filepath.Join(path, "shed.yml")
+	var dat []byte
+	for _, name := range []string{"shed.yml", ".shed.yml"} {
+		if len(dat) > 0 {
+			break
+		}
 
-	dat, err := ioutil.ReadFile(file)
+		file := filepath.Join(path, name)
+		dat, err = ioutil.ReadFile(file)
+	}
+
 	if err != nil {
-		return Config{}, err
+		return Config{}, ErrNoShedFile
 	}
 
 	var config Config
