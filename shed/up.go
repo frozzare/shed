@@ -11,10 +11,10 @@ import (
 	cli "gopkg.in/urfave/cli.v1"
 )
 
-var DeployCmd = cli.Command{
-	Name:   "deploy",
-	Usage:  "deploy",
-	Action: deploy,
+var UpCmd = cli.Command{
+	Name:   "up",
+	Usage:  "up",
+	Action: up,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
 			Name: "debug",
@@ -31,7 +31,7 @@ func rerr(c *cli.Context, err error) {
 	}
 }
 
-func deploy(c *cli.Context) {
+func up(c *cli.Context) {
 	// Load configuration.
 	config, err := config.NewConfig()
 	if err != nil {
