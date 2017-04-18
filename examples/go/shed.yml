@@ -6,6 +6,7 @@ docker:
 git:
   branch: master
 
+# Base domain that will be used for subdomain (branch name + domain, e.g: master.krig.dev)
 domain: krig.dev
 
 # We can override any setting matching a branch name.
