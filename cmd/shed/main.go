@@ -15,6 +15,8 @@ func main() {
 	app.Usage = "cli for deploying test containers based on a git repository"
 	app.Flags = []cli.Flag{}
 	app.Commands = []cli.Command{
+		shed.AppCmd,
+		shed.DownCmd,
 		shed.UpCmd,
 	}
 

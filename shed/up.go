@@ -2,12 +2,8 @@ package shed
 
 import (
 	"fmt"
-	"log"
 
-	"github.com/frozzare/shed/app"
-	"github.com/frozzare/shed/config"
 	"github.com/frozzare/shed/docker"
-	"github.com/frozzare/shed/repository"
 	cli "gopkg.in/urfave/cli.v1"
 )
 
@@ -22,37 +18,14 @@ var UpCmd = cli.Command{
 	},
 }
 
-func rerr(c *cli.Context, err error) {
-	if c.Bool("debug") {
-		log.Fatal(err)
-	} else {
-		fmt.Printf("==> error: %s\n", err.Error())
-		return
-	}
-}
-
 func up(c *cli.Context) {
-	// Load configuration.
-	config, err := config.NewConfig()
+	app, err := load(c)
 	if err != nil {
 		rerr(c, err)
 		return
 	}
 
-	// Load git repository.
-	repo, err := repository.NewRepository(config.Git)
-	if err != nil {
-		rerr(c, err)
-		return
-	}
-
-	// Create a new application.
-	app, err := app.NewApp(&app.Options{
-		Config:     config,
-		Repository: repo,
-	})
-
-	fmt.Printf("==>    shed: deploying %s\n", app.Domain())
+	fmt.Printf("==>    shed: creating %s\n", app.Domain())
 
 	// Connect to docker.
 	fmt.Println("==>  docker: connecting to docker remote api")
