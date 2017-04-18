@@ -1,0 +1,13 @@
+docker:
+  endpoint: unix:///var/run/docker.sock
+
+git:
+  branch: master
+
+domain: krig.dev
+
+#branches:
+#  master:
+#    docker:
+#      endpoint: unix:///var/run/docker.sock
+#    domain: krig.dev

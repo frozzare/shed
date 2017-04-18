@@ -1,0 +1,11 @@
+web:
+  image: golang:1.8
+  working_dir: /go/src/app
+  command: go run main.go
+  volumes:
+    - .:/go/src/app
+  expose:
+    - 80
+  restart: always
+  environment:
+    - VIRTUAL_HOST=${SHED_DOMAIN}
