@@ -8,6 +8,7 @@ import (
 	git "gopkg.in/src-d/go-git.v4"
 
 	assert "github.com/frozzare/go-assert"
+	"github.com/frozzare/shed/config"
 )
 
 func TestRepository(t *testing.T) {
@@ -17,7 +18,9 @@ func TestRepository(t *testing.T) {
 	_, err = git.PlainInit(path, false)
 	assert.Nil(t, err)
 
-	config, err := NewRepository(path)
+	config, err := NewRepository(config.Git{
+		Path: path,
+	})
 	assert.Nil(t, err)
 	assert.Equal(t, config.Branch, "master")
 

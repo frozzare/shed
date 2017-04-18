@@ -8,16 +8,23 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+// Docker represents a docker config section.
+type Docker struct {
+	Endpoint string `yaml:"endpoint"`
+}
+
+// Git represents a git config section.
+type Git struct {
+	Branch string `yaml:"branch"`
+	Path   string `yaml:"path"`
+}
+
 // Config represents a config file.
 type Config struct {
 	Branches map[string]Config `yaml:"branches"`
-	Docker   struct {
-		Endpoint string `yaml:"endpoint"`
-	} `yaml:"docker"`
-	Domain string `yaml:"domain"`
-	Git    struct {
-		Path string `yaml:"path"`
-	} `yaml:"git"`
+	Docker   Docker            `yaml:"docker"`
+	Domain   string            `yaml:"domain"`
+	Git      Git               `yaml:"git"`
 }
 
 // NewConfig creates a new config struct from a yaml file.

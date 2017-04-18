@@ -56,16 +56,18 @@ func (a *App) Repository() repository.Repository {
 
 // Domain returns the application domain.
 func (a *App) Domain() string {
-	domain := a.opts.Config.Domain
+	repo := a.Repository()
 
+	// Let's allow specific domains for different branches.
+	if len(a.opts.Config.Branches[repo.Branch].Domain) > 0 {
+		return a.opts.Config.Branches[repo.Branch].Domain
+	}
+
+	// Add leading dot to domain name if missing.
+	domain := a.opts.Config.Domain
 	if domain[0] != '.' {
 		domain = "." + domain
 	}
 
-	// Let's allow specific domains for different branches.
-	if len(a.opts.Config.Branches[a.opts.Repository.Branch].Domain) > 0 {
-		return a.opts.Config.Branches[a.opts.Repository.Branch].Domain
-	}
-
-	return a.opts.Repository.Slug + domain
+	return repo.Slug + domain
 }

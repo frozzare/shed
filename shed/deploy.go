@@ -40,7 +40,7 @@ func deploy(c *cli.Context) {
 	}
 
 	// Load git repository.
-	repo, err := repository.NewRepository(config.Git.Path)
+	repo, err := repository.NewRepository(config.Git)
 	if err != nil {
 		rerr(c, err)
 		return
@@ -83,5 +83,5 @@ func deploy(c *cli.Context) {
 		fmt.Printf("==> %s\n", err.Error())
 	}
 
-	fmt.Printf("==>    shed: done, http://%s\n is now live", app.Domain())
+	fmt.Printf("==>    shed: done, http://%s is now up\n", app.Domain())
 }

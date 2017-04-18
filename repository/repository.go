@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/frozzare/shed/config"
 	"github.com/gosimple/slug"
 
 	git "gopkg.in/src-d/go-git.v4"
@@ -22,12 +23,12 @@ type Repository struct {
 }
 
 // NewRepository creates a new repostiory.
-func NewRepository(args ...string) (Repository, error) {
+func NewRepository(config config.Git) (Repository, error) {
 	var err error
 	var path string
 
-	if len(args) > 0 && args[0] != "" {
-		path = args[0]
+	if len(config.Path) > 0 {
+		path = config.Path
 	} else {
 		path, err = os.Getwd()
 	}
@@ -38,6 +39,10 @@ func NewRepository(args ...string) (Repository, error) {
 
 	r, err := git.PlainOpen(path)
 	if err != nil {
+		if len(config.Branch) > 0 {
+			return NewRepositoryFromBranch(config.Branch), nil
+		}
+
 		return Repository{}, err
 	}
 
@@ -67,8 +72,13 @@ func NewRepository(args ...string) (Repository, error) {
 		branch = p[len(p)-1]
 	}
 
+	return NewRepositoryFromBranch(branch), nil
+}
+
+// NewRepositoryFromBranch creates a new repostiory from branch name.
+func NewRepositoryFromBranch(branch string) Repository {
 	return Repository{
 		Branch: branch,
 		Slug:   slug.Make(branch),
-	}, nil
+	}
 }
