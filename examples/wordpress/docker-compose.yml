@@ -1,0 +1,14 @@
+web:
+  image: wordpress
+  expose:
+    - 80
+  environment:
+    WORDPRESS_DB_PASSWORD: example
+    VIRTUAL_HOST: ${SHED_DOMAIN}
+  links:
+    - mysql
+
+mysql:
+  image: mariadb
+  environment:
+    MYSQL_ROOT_PASSWORD: example

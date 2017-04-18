@@ -1,0 +1,19 @@
+# Docker configuration.
+docker:
+  endpoint: unix:///var/run/docker.sock
+  # TLS path configuration:
+  # tlscacert:
+  # tlscert:
+  # tlskey:
+
+# Setting a branch name will allow us to deploy without a git repository.
+git:
+  branch: wordpress
+
+# Base domain that will be used for subdomain (branch name + domain, e.g: master.krig.dev)
+domain: krig.dev
+
+# We can override any setting matching a branch name.
+# branches:
+#  wordpress:
+#    domain: krig.dev
