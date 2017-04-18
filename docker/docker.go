@@ -21,8 +21,8 @@ func NewDocker(config config.Docker) (*Docker, error) {
 
 	endpoint := Endpoint(config.Endpoint)
 
-	if len(config.TLSCa) > 0 || len(config.TLSCert) > 0 || len(config.TLSKey) > 0 {
-		client, err = api.NewVersionedTLSClient(endpoint, config.TLSCert, config.TLSKey, config.TLSCa, config.Version)
+	if len(config.TLSCaCert) > 0 || len(config.TLSCert) > 0 || len(config.TLSKey) > 0 {
+		client, err = api.NewVersionedTLSClient(endpoint, config.TLSCert, config.TLSKey, config.TLSCaCert, config.Version)
 	} else {
 		client, err = api.NewVersionedClient(endpoint, config.Version)
 	}
