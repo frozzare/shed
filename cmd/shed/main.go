@@ -12,7 +12,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "shed"
 	app.Version = version.Version
-	app.Usage = "command line utility for deploying test containers"
+	app.Usage = "cli for deploying test containers based on a git repository"
 	app.Flags = []cli.Flag{}
 	app.Commands = []cli.Command{
 		shed.DeployCmd,
