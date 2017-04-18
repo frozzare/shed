@@ -5,17 +5,27 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/frozzare/shed/app"
+	"github.com/frozzare/shed/config"
 	api "github.com/fsouza/go-dockerclient"
 )
 
+// Docker represents a docker client.
 type Docker struct {
 	client *api.Client
 }
 
 // NewDocker creates a new docker client.
-func NewDocker(app *app.App) (*Docker, error) {
-	client, err := api.NewClient(Endpoint(app.Config().Docker.Endpoint))
+func NewDocker(config config.Docker) (*Docker, error) {
+	var client *api.Client
+	var err error
+
+	endpoint := Endpoint(config.Endpoint)
+
+	if len(config.TLSCa) > 0 || len(config.TLSCert) > 0 || len(config.TLSKey) > 0 {
+		client, err = api.NewVersionedTLSClient(endpoint, config.TLSCert, config.TLSKey, config.TLSCa, config.Version)
+	} else {
+		client, err = api.NewVersionedClient(endpoint, config.Version)
+	}
 
 	if err != nil {
 		return nil, err

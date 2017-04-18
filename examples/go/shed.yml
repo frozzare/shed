@@ -1,6 +1,10 @@
 # Docker configuration.
 docker:
   endpoint: unix:///var/run/docker.sock
+  # TLS path configuration:
+  # tlsca:
+  # tlscert:
+  # tlskey:
 
 # Setting a branch name will allow us to deploy without a git repository.
 git:

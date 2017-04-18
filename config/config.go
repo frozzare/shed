@@ -11,6 +11,10 @@ import (
 // Docker represents a docker config section.
 type Docker struct {
 	Endpoint string `yaml:"endpoint"`
+	TLSCa    string `yaml:"tlsca"`
+	TLSCert  string `yaml:"tlscert"`
+	TLSKey   string `yaml:"tlskey"`
+	Version  string `yaml:"version"`
 }
 
 // Git represents a git config section.
