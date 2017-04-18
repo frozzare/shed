@@ -7,9 +7,9 @@ import (
 )
 
 func TestExecCmd(t *testing.T) {
-	err := execcmd("ls", false)
+	err := ExecCmd("ls", false)
 	assert.Nil(t, err)
 
-	err = execcmd("ls", true)
+	err = ExecCmd("ls", true)
 	assert.Nil(t, err)
 }

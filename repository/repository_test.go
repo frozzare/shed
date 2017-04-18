@@ -21,5 +21,5 @@ func TestRepository(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, config.Branch, "master")
 
-	os.Remove(filepath.Join(path, ".git"))
+	os.RemoveAll(filepath.Join(path, ".git"))
 }

@@ -17,10 +17,10 @@ func TestApp(t *testing.T) {
 
 func TestDomain(t *testing.T) {
 	app, _ := NewApp(&Options{
-		Config: &config.Config{
+		Config: config.Config{
 			Domain: "shed.io",
 		},
-		Repository: &repository.Repository{
+		Repository: repository.Repository{
 			Slug: "master",
 		},
 	})
