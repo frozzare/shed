@@ -1,13 +1,14 @@
+# Docker configuration.
 docker:
   endpoint: unix:///var/run/docker.sock
 
+# Setting a default branch will allow us to deploy without a git repository.
 git:
   branch: master
 
 domain: krig.dev
 
-#branches:
-#  master:
-#    docker:
-#      endpoint: unix:///var/run/docker.sock
-#    domain: krig.dev
+# We can override any setting matching a branch name.
+branches:
+  master:
+    domain: krig.dev
