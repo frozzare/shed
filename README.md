@@ -7,7 +7,7 @@ Cli for deploying test containers based on a git repository with docker.
 ## Requirements
 
 * [docker-machine](https://docs.docker.com/machine/) for remote deployments.
-* [docker-compose](https://docs.docker.com/compose/) for docker compose.
+* [docker-compose](https://docs.docker.com/compose/) for running docker-compose.
 
 ## Installation
 
