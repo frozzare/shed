@@ -34,6 +34,7 @@ type Config struct {
 	Docker   Docker            `yaml:"docker"`
 	Domain   string            `yaml:"domain"`
 	Git      Git               `yaml:"git"`
+	HTTPS    bool              `yaml:"https"`
 }
 
 // NewConfig creates a new config struct from a yaml file.

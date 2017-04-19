@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/frozzare/shed/config"
@@ -70,4 +71,14 @@ func (a *App) Domain() string {
 	}
 
 	return repo.Slug + domain
+}
+
+// URL returns the url to the application.
+func (a *App) URL() string {
+	scheme := "http"
+	if a.Config().HTTPS {
+		scheme = "https"
+	}
+
+	return fmt.Sprintf("%s://%s", scheme, a.Domain())
 }

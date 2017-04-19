@@ -56,5 +56,5 @@ func up(c *cli.Context) {
 		fmt.Printf("==> %s\n", err.Error())
 	}
 
-	fmt.Printf("==>    shed: done, http://%s is now up\n", app.Domain())
+	fmt.Printf("==>    shed: done, %s is now up\n", app.URL())
 }

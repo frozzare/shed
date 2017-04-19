@@ -47,5 +47,6 @@ func ap(c *cli.Context) {
 		return
 	}
 
-	fmt.Printf("Domain: http://%s\n", app.Domain())
+	fmt.Printf("Branch: %s\n", app.Repository().Branch)
+	fmt.Printf("URL: %s\n", app.URL())
 }
