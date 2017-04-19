@@ -37,6 +37,9 @@ func NewDocker(config config.Docker) (*Docker, error) {
 		client, err = api.NewClientFromEnv()
 		host = os.Getenv("DOCKER_HOST")
 	} else {
+		// Set shed path for local machine.
+		os.Setenv("SHED_PATH", ".")
+
 		// Find docker host for local machine.
 		if os.Getenv("DOCKER_HOST") != "" {
 			host = os.Getenv("DOCKER_HOST")
