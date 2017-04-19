@@ -3,7 +3,5 @@ web:
   build: .
   expose:
     - 80
-  volumes:
-    - ${SHED_PATH}/www:/app
   environment:
     - VIRTUAL_HOST=${SHED_DOMAIN}

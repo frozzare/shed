@@ -1,3 +1,8 @@
+docker:
+  # build is required if the image should be rebuild if already build.
+  build: true
+  # machine: shed.com
+
 # Setting a branch name will allow us to deploy without a git repository.
 git:
   branch: docker

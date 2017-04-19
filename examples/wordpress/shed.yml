@@ -1,3 +1,7 @@
+# We can deploy to a docker-machine instead of local machine.
+# docker:
+  # machine: shed.com
+
 # Setting a branch name will allow us to deploy without a git repository.
 git:
   branch: wordpress
