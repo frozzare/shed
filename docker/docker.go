@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"strings"
 
 	"github.com/frozzare/shed/config"
 	api "github.com/fsouza/go-dockerclient"
@@ -131,25 +130,11 @@ func (d *Docker) StartNginxContainer() error {
 		ports = append(ports, d.config.Proxy.Ports.HTTPS)
 	}
 
-	// Check if image exists or pull it.
-	d.pullImage(image)
-
-	// Create container if it don't exists.
-	container, err := d.client.CreateContainer(createOptions(&createContainerOptions{
-		Name:    "/shed_nginx_proxy",
-		Image:   image,
-		Ports:   ports,
-		Volumes: []string{"/var/run/docker.sock:/tmp/docker.sock:ro"},
-	}))
-
-	if err != nil {
-		// Container already exists error is okey.
-		if strings.Contains(err.Error(), "container already exists") {
-			return nil
-		}
-
-		return err
-	}
-
-	return d.startContainer(container)
+	return d.createContainer(&createContainerOptions{
+		Name:     "/shed_nginx_proxy",
+		Image:    image,
+		Recreate: true,
+		Ports:    ports,
+		Volumes:  []string{"/var/run/docker.sock:/tmp/docker.sock:ro"},
+	})
 }

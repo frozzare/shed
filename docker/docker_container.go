@@ -1,6 +1,7 @@
 package docker
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -10,11 +11,12 @@ import (
 )
 
 type createContainerOptions struct {
-	IP      string
-	Image   string
-	Name    string
-	Ports   []string
-	Volumes []string
+	Recreate bool
+	IP       string
+	Image    string
+	Name     string
+	Ports    []string
+	Volumes  []string
 }
 
 // createOptions will create container options struct
@@ -75,6 +77,63 @@ func createOptions(opts *createContainerOptions) api.CreateContainerOptions {
 	return options
 }
 
+// createContainer will create a container with the given options.
+func (d *Docker) createContainer(opts *createContainerOptions) error {
+	// Check if image exists or pull it.
+	d.pullImage(opts.Image)
+
+CREATE:
+	// Create container if it don't exists.
+	container, err := d.client.CreateContainer(createOptions(opts))
+
+	if err != nil {
+		// Try to destroy the container if it exists and should be recreated.
+		if strings.Contains(err.Error(), "container already exists") && opts.Recreate {
+			containers, err := d.client.ListContainers(api.ListContainersOptions{
+				All: true,
+			})
+
+			if err != nil {
+				return err
+			}
+
+			containerName := opts.Name
+			if opts.Name[0] != '/' {
+				containerName = "/" + containerName
+			}
+
+			for _, container := range containers {
+				found := false
+				for _, name := range container.Names {
+					if name == containerName {
+						found = true
+						break
+					}
+				}
+
+				if !found {
+					continue
+				}
+
+				container, err := d.client.InspectContainer(container.ID)
+				if err != nil {
+					return fmt.Errorf("Failed to inspect container %s: %s", container.ID, err)
+				}
+
+				if err := d.removeContainer(container); err != nil {
+					return err
+				}
+
+				goto CREATE
+			}
+		}
+
+		return err
+	}
+
+	return d.startContainer(container)
+}
+
 // startContainer will start the container or try to start the container five times before it stops.
 func (d *Docker) startContainer(container *api.Container) error {
 	attempted := 0
@@ -110,6 +169,28 @@ STOP:
 
 		if strings.Contains(strings.ToLower(err.Error()), "container not running") {
 			return nil
+		}
+
+		return err
+	}
+
+	return nil
+}
+
+// removeContainer will remove the container or try to remove the container five times before it stops.
+func (d *Docker) removeContainer(container *api.Container) error {
+	attempted := 0
+REMOVE:
+	if err := d.client.RemoveContainer(api.RemoveContainerOptions{
+		ID:    container.ID,
+		Force: true,
+	}); err != nil {
+		if strings.Contains(err.Error(), "API error (500)") {
+			if attempted < 5 {
+				attempted++
+				time.Sleep(1 * time.Second)
+				goto REMOVE
+			}
 		}
 
 		return err
