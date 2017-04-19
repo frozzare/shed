@@ -28,7 +28,7 @@ func down(c *cli.Context) {
 	fmt.Printf("==>    shed: destroying %s\n", app.Domain())
 
 	// Connect to docker.
-	fmt.Println("==>  docker: connecting to docker remote api")
+	fmt.Println("==>  docker: connecting to docker")
 	dock, err := docker.NewDocker(app.Config().Docker)
 	if err != nil {
 		rerr(c, err)
