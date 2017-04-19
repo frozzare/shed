@@ -47,7 +47,7 @@ func up(c *cli.Context) {
 	if err := dock.StartNginxContainer(); err != nil {
 		fmt.Printf("==>   error: %s\n", err.Error())
 	} else {
-		fmt.Println("==>  docker: nginx proxy container is created or already exists")
+		fmt.Println("==>  docker: nginx proxy container is created")
 	}
 
 	// Sync application files.
