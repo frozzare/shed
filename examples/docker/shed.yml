@@ -1,6 +1,6 @@
 # Setting a branch name will allow us to deploy without a git repository.
 git:
-  branch: php
+  branch: docker
 
 # Base domain that will be used for subdomain (branch name + domain, e.g: master.shed.dev)
 domain: shed.dev
