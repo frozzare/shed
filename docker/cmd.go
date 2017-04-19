@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 )
 
@@ -31,14 +32,21 @@ func ExecCmd(input string, output bool) error {
 		return err
 	}
 
-	if output {
-		scanner := bufio.NewScanner(cmdReader)
-		go func() {
-			for scanner.Scan() {
+	scanner := bufio.NewScanner(cmdReader)
+	r := regexp.MustCompile("^(?:export|)\\s*([^\\d+][\\w_]+)\\s?=\\s?(.+)")
+	go func() {
+		for scanner.Scan() {
+			text := scanner.Text()
+			if r.MatchString(text) {
+				s := r.FindStringSubmatch(text)
+				if len(s) > 1 {
+					os.Setenv(s[1], strings.Trim(s[2], "\""))
+				}
+			} else if output {
 				fmt.Println("  " + scanner.Text())
 			}
-		}()
-	}
+		}
+	}()
 
 	err = cmd.Start()
 	if err != nil {

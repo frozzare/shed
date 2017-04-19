@@ -5,6 +5,6 @@ web:
     - 80
   command: php -S 0.0.0.0:80 /app/index.php
   volumes:
-    - ./www:/app
+    - ${SHED_PATH}:/app
   environment:
     - VIRTUAL_HOST=${SHED_DOMAIN}

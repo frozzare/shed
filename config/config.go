@@ -15,11 +15,13 @@ var (
 
 // Docker represents a docker config section.
 type Docker struct {
-	Endpoint  string `yaml:"endpoint"`
-	TLSCaCert string `yaml:"tlscacert"`
-	TLSCert   string `yaml:"tlscert"`
-	TLSKey    string `yaml:"tlskey"`
-	Version   string `yaml:"version"`
+	Machine string      `yaml:"machine"`
+	Proxy   DockerProxy `yaml:"proxy"`
+}
+
+type DockerProxy struct {
+	Image string   `yaml:"image"`
+	Ports []string `yaml:"ports"`
 }
 
 // Git represents a git config section.

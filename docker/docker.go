@@ -1,6 +1,8 @@
 package docker
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"runtime"
 	"strings"
@@ -12,19 +14,39 @@ import (
 // Docker represents a docker client.
 type Docker struct {
 	client *api.Client
+	config config.Docker
+	host   string
 }
 
 // NewDocker creates a new docker client.
 func NewDocker(config config.Docker) (*Docker, error) {
 	var client *api.Client
 	var err error
+	var host string
 
-	endpoint := Endpoint(config.Endpoint)
+	if len(config.Machine) > 0 {
+		// Set shed path for docker machine.
+		os.Setenv("SHED_PATH", "/tmp/shed")
 
-	if len(config.TLSCaCert) > 0 || len(config.TLSCert) > 0 || len(config.TLSKey) > 0 {
-		client, err = api.NewVersionedTLSClient(endpoint, config.TLSCert, config.TLSKey, config.TLSCaCert, config.Version)
+		// Set docker machine environment variables.
+		cmd := fmt.Sprintf("docker-machine env %s", config.Machine)
+		if err := ExecCmd(cmd, false); err != nil {
+			return nil, err
+		}
+
+		client, err = api.NewClientFromEnv()
+		host = os.Getenv("DOCKER_HOST")
 	} else {
-		client, err = api.NewVersionedClient(endpoint, config.Version)
+		// Find docker host for local machine.
+		if os.Getenv("DOCKER_HOST") != "" {
+			host = os.Getenv("DOCKER_HOST")
+		} else if runtime.GOOS == "windows" {
+			host = "http://localhost:2375"
+		} else {
+			host = "unix:///var/run/docker.sock"
+		}
+
+		client, err = api.NewClient(host)
 	}
 
 	if err != nil {
@@ -33,26 +55,38 @@ func NewDocker(config config.Docker) (*Docker, error) {
 
 	return &Docker{
 		client: client,
+		config: config,
+		host:   host,
 	}, nil
 }
 
-// Endpoint will return the docker endpoint that should be used.
-func Endpoint(args ...string) string {
-	var endpoint string
-
-	if len(args) > 0 && len(args[0]) > 0 {
-		return args[0]
+// Sync application files with docker machine.
+func (d *Docker) Sync() error {
+	if len(d.config.Machine) == 0 {
+		return errors.New("running on local machine, no need to sync application files")
 	}
 
-	if os.Getenv("DOCKER_URL") != "" {
-		endpoint = os.Getenv("DOCKER_URL")
-	} else if runtime.GOOS == "windows" {
-		endpoint = "http://localhost:2375"
-	} else {
-		endpoint = "unix:///var/run/docker.sock"
+	cmd := fmt.Sprintf("docker-machine ssh %s -- rm -rf %s", d.config.Machine, os.Getenv("SHED_PATH"))
+	if err := ExecCmd(cmd, true); err != nil {
+		return err
 	}
 
-	return endpoint
+	cmd = fmt.Sprintf("docker-machine ssh %s -- mkdir -p %s", d.config.Machine, os.Getenv("SHED_PATH"))
+	if err := ExecCmd(cmd, true); err != nil {
+		return err
+	}
+
+	cmd = fmt.Sprintf("docker-machine scp -r . %s:%s", d.config.Machine, os.Getenv("SHED_PATH"))
+	if err := ExecCmd(cmd, true); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Host will return the docker host that is used.
+func (d *Docker) Host() string {
+	return d.host
 }
 
 // Prune removes all unused containers, volumes, networks and images (both dangling and unreferenced).
@@ -78,16 +112,26 @@ func (d *Docker) Prune() error {
 
 // StartNginxContainer will start nginx proxy container.
 func (d *Docker) StartNginxContainer() error {
-	image := "jwilder/nginx-proxy"
+	// Define image.
+	image := d.config.Proxy.Image
+	if len(image) == 0 {
+		image = "jwilder/nginx-proxy"
+	}
 
-	// check if image exists or pull it.
+	// Define ports.
+	ports := d.config.Proxy.Ports
+	if len(ports) == 0 {
+		ports = []string{"80:80", "443:433"}
+	}
+
+	// Check if image exists or pull it.
 	d.pullImage(image)
 
 	// Create container if it don't exists.
 	container, err := d.client.CreateContainer(createOptions(&createContainerOptions{
 		Name:    "/shed_nginx_proxy",
 		Image:   image,
-		Ports:   []string{"80:80", "443:433"},
+		Ports:   ports,
 		Volumes: []string{"/var/run/docker.sock:/tmp/docker.sock:ro"},
 	}))
 

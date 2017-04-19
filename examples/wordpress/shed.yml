@@ -1,11 +1,3 @@
-# Docker configuration.
-docker:
-  endpoint: unix:///var/run/docker.sock
-  # TLS path configuration:
-  # tlscacert:
-  # tlscert:
-  # tlskey:
-
 # Setting a branch name will allow us to deploy without a git repository.
 git:
   branch: wordpress

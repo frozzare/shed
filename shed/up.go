@@ -28,7 +28,7 @@ func up(c *cli.Context) {
 	fmt.Printf("==>    shed: creating %s\n", app.Domain())
 
 	// Connect to docker.
-	fmt.Println("==>  docker: connecting to docker remote api")
+	fmt.Println("==>  docker: connecting to docker")
 	dock, err := docker.NewDocker(app.Config().Docker)
 	if err != nil {
 		rerr(c, err)
@@ -38,20 +38,28 @@ func up(c *cli.Context) {
 	// Prune removes all unused containers, volumes, networks and images (both dangling and unreferenced).
 	fmt.Println("==>  docker: system pruning")
 	if err := dock.Prune(); err != nil {
-		fmt.Printf("==>    error: %s\n", err.Error())
+		fmt.Printf("==>   error: %s\n", err.Error())
 	} else {
 		fmt.Println("==>  docker: system pruned")
 	}
 
 	// Start nginx proxy container if it don't exists.
 	if err := dock.StartNginxContainer(); err != nil {
-		fmt.Printf("==>    error: %s\n", err.Error())
+		fmt.Printf("==>   error: %s\n", err.Error())
 	} else {
 		fmt.Println("==>  docker: nginx proxy container is created or already exists")
 	}
 
+	// Sync application files.
+	fmt.Println("==>  docker: syncing files")
+	if err := dock.Sync(); err != nil {
+		fmt.Printf("==>   error: %s\n", err.Error())
+	} else {
+		fmt.Println("==>  docker: syncing done")
+	}
+
 	// Run docker-compose command.
-	cmd := fmt.Sprintf("docker-compose -H %s up -d --force-recreate", docker.Endpoint())
+	cmd := fmt.Sprintf("docker-compose -H %s up -d --force-recreate", dock.Host())
 	if err := docker.ExecCmd(cmd, true); err != nil {
 		fmt.Printf("==> %s\n", err.Error())
 	}
