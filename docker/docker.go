@@ -122,9 +122,13 @@ func (d *Docker) StartNginxContainer() error {
 	}
 
 	// Define ports.
-	ports := d.config.Proxy.Ports
-	if len(ports) == 0 {
-		ports = []string{"80:80", "443:433"}
+	ports := []string{
+		config.Def(d.config.Proxy.Ports.HTTP, "80:80"),
+	}
+
+	// Only bind https if https ports is provided.
+	if len(d.config.Proxy.Ports.HTTPS) > 0 {
+		ports = append(ports, d.config.Proxy.Ports.HTTPS)
 	}
 
 	// Check if image exists or pull it.

@@ -22,8 +22,11 @@ type Docker struct {
 
 // DockerProxy represents a docker proxy config section.
 type DockerProxy struct {
-	Image string   `yaml:"image"`
-	Ports []string `yaml:"ports"`
+	Image string `yaml:"image"`
+	Ports struct {
+		HTTP  string `yaml:"http"`
+		HTTPS string `yaml:"https"`
+	} `yaml:"ports"`
 }
 
 // Git represents a git config section.
@@ -57,7 +60,7 @@ func NewConfig(args ...string) (Config, error) {
 	}
 
 	var dat []byte
-	for _, name := range []string{"shed.yml", ".shed.yml"} {
+	for _, name := range []string{".shed.yml", "shed.yml"} {
 		if len(dat) > 0 {
 			break
 		}
@@ -77,4 +80,13 @@ func NewConfig(args ...string) (Config, error) {
 	}
 
 	return config, nil
+}
+
+// Def returns second parameter if first paramter length is zero.
+func Def(a, b string) string {
+	if len(a) == 0 {
+		return b
+	}
+
+	return a
 }

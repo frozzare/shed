@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/frozzare/shed/config"
 	"github.com/frozzare/shed/repository"
@@ -76,9 +77,20 @@ func (a *App) Domain() string {
 // URL returns the url to the application.
 func (a *App) URL() string {
 	scheme := "http"
+	port := a.Config().Docker.Proxy.Ports.HTTP
 	if a.Config().HTTPS {
 		scheme = "https"
+		port = a.Config().Docker.Proxy.Ports.HTTPS
 	}
 
-	return fmt.Sprintf("%s://%s", scheme, a.Domain())
+	if strings.Contains(port, ":") {
+		p := strings.Split(port, ":")
+		port = p[0]
+	}
+
+	if len(port) > 0 {
+		port = ":" + port
+	}
+
+	return fmt.Sprintf("%s://%s%s", scheme, a.Domain(), port)
 }
