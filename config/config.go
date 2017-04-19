@@ -15,10 +15,12 @@ var (
 
 // Docker represents a docker config section.
 type Docker struct {
+	Build   bool        `yaml:"build"`
 	Machine string      `yaml:"machine"`
 	Proxy   DockerProxy `yaml:"proxy"`
 }
 
+// DockerProxy represents a docker proxy config section.
 type DockerProxy struct {
 	Image string   `yaml:"image"`
 	Ports []string `yaml:"ports"`

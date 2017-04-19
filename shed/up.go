@@ -59,7 +59,11 @@ func up(c *cli.Context) {
 	}
 
 	// Run docker-compose command.
-	cmd := fmt.Sprintf("docker-compose -H %s up -d --force-recreate", dock.Host())
+	flags := "--force-recreate"
+	if app.Config().Docker.Build {
+		flags = "--build"
+	}
+	cmd := fmt.Sprintf("docker-compose -H %s up -d %s", dock.Host(), flags)
 	if err := docker.ExecCmd(cmd, true); err != nil {
 		fmt.Printf("==> %s\n", err.Error())
 	}
