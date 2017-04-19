@@ -2,7 +2,20 @@
 
 > Work in progress
 
-Cli for deploying test containers based on a git repository.
+Cli for deploying test containers based on a git repository with docker.
+
+## Requirements
+
+* [docker-machine](https://docs.docker.com/machine/) for remote deployments.
+* [docker-compose](https://docs.docker.com/compose/) for docker compose.
+
+## Installation
+
+TBA
+
+## Configuration
+
+TBA
 
 # License
 
