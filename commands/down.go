@@ -1,4 +1,4 @@
-package shed
+package commands
 
 import (
 	"fmt"
