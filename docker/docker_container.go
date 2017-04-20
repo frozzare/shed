@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/frozzare/shed/config"
 	api "github.com/fsouza/go-dockerclient"
 )
 
@@ -21,10 +22,7 @@ type createContainerOptions struct {
 
 // createOptions will create container options struct
 func createOptions(opts *createContainerOptions) api.CreateContainerOptions {
-	ip := opts.IP
-	if len(ip) == 0 {
-		ip = "0.0.0.0"
-	}
+	ip := config.Def(opts.IP, "0.0.0.0")
 
 	publishedPorts := map[api.Port][]api.PortBinding{}
 	for _, port := range opts.Ports {
