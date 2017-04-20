@@ -19,7 +19,7 @@ var AppCmd = cli.Command{
 
 func load(c *cli.Context) (*app.App, error) {
 	// Load configuration.
-	config, err := config.NewConfig()
+	config, err := config.NewConfig(c.GlobalString("file"))
 	if err != nil {
 		return nil, err
 	}

@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrNoShedFile = errors.New("No shed.yml or .shed.yml file found")
+	ErrNoShedFile = errors.New("No .shed.yml or shed.yml file found")
 )
 
 // Docker represents a docker config section.
@@ -45,11 +45,16 @@ type Config struct {
 
 // NewConfig creates a new config struct from a yaml file.
 func NewConfig(args ...string) (Config, error) {
+	var file string
 	var path string
 	var err error
 
 	if len(args) > 0 && args[0] != "" {
-		path = args[0]
+		if _, err := os.Stat(args[0]); err == nil {
+			file = args[0]
+		} else {
+			path = args[0]
+		}
 	} else {
 		path, err = os.Getwd()
 	}
@@ -58,8 +63,13 @@ func NewConfig(args ...string) (Config, error) {
 		return Config{}, err
 	}
 
+	files := []string{".shed.yml", "shed.yml"}
+	if len(file) > 0 {
+		files = append([]string{file}, files...)
+	}
+
 	var dat []byte
-	for _, name := range []string{".shed.yml", "shed.yml"} {
+	for _, name := range files {
 		if len(dat) > 0 {
 			break
 		}

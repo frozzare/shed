@@ -13,7 +13,12 @@ func main() {
 	app.Name = "shed"
 	app.Version = version.Version
 	app.Usage = "cli for deploying test containers based on a git repository"
-	app.Flags = []cli.Flag{}
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:  "file, f",
+			Usage: "Specify an alternate shed file (default: .shed.yml or shed.yml)",
+		},
+	}
 	app.Commands = []cli.Command{
 		commands.AppCmd,
 		commands.DownCmd,
