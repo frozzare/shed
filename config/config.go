@@ -15,7 +15,6 @@ var (
 
 // Docker represents a docker config section.
 type Docker struct {
-	Build   bool        `yaml:"build"`
 	Machine string      `yaml:"machine"`
 	Proxy   DockerProxy `yaml:"proxy"`
 }
