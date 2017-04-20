@@ -21,7 +21,7 @@ func up(c *cli.Context) {
 		log.Error(err)
 	}
 
-	log.Info("shed: creating %s", app.Domain())
+	log.Info("shed: creating %s", app.Host())
 
 	// Connect to docker.
 	log.Info("docker: connecting to docker")

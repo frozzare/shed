@@ -21,7 +21,7 @@ func down(c *cli.Context) {
 		log.Error(err)
 	}
 
-	log.Info("shed: destroying %s", app.Domain())
+	log.Info("shed: destroying %s", app.Host())
 
 	// Connect to docker.
 	log.Info("docker: connecting to docker")

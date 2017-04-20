@@ -65,9 +65,9 @@ func (a *App) Host() string {
 		return a.opts.Config.Branches[repo.Branch].Host
 	}
 
-	// Add leading dot to domain name if missing.
+	// Add leading dot to host name if missing.
 	host := a.opts.Config.Host
-	if domain[0] != '.' {
+	if host[0] != '.' {
 		host = "." + host
 	}
 
