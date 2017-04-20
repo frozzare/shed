@@ -122,12 +122,12 @@ func (d *Docker) StartNginxContainer() error {
 
 	// Define ports.
 	ports := []string{
-		config.Def(d.config.Proxy.Ports.HTTP, "80:80"),
+		config.Def(d.config.Proxy.HTTPPort, "80:80"),
 	}
 
 	// Only bind https if https ports is provided.
-	if len(d.config.Proxy.Ports.HTTPS) > 0 {
-		ports = append(ports, d.config.Proxy.Ports.HTTPS)
+	if len(d.config.Proxy.HTTPSPort) > 0 {
+		ports = append(ports, d.config.Proxy.HTTPSPort)
 	}
 
 	return d.createContainer(&createContainerOptions{

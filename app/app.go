@@ -77,10 +77,10 @@ func (a *App) Host() string {
 // URL returns the url to the application.
 func (a *App) URL() string {
 	scheme := "http"
-	port := a.Config().Docker.Proxy.Ports.HTTP
-	if len(a.Config().Docker.Proxy.Ports.HTTPS) > 0 {
+	port := a.Config().Docker.Proxy.HTTPPort
+	if len(a.Config().Docker.Proxy.HTTPSPort) > 0 {
 		scheme = "https"
-		port = a.Config().Docker.Proxy.Ports.HTTPS
+		port = a.Config().Docker.Proxy.HTTPSPort
 	}
 
 	if strings.Contains(port, ":") {

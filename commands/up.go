@@ -23,6 +23,13 @@ func up(c *cli.Context) {
 
 	log.Info("shed: creating %s", app.Host())
 
+	// Executing before scripts.
+	for _, cmd := range app.Config().BeforeScript {
+		if err := docker.ExecCmd(cmd, true); err != nil {
+			log.Error(err)
+		}
+	}
+
 	// Connect to docker.
 	log.Info("docker: connecting to docker")
 	dock, err := docker.NewDocker(app.Config().Docker)
@@ -63,6 +70,13 @@ func up(c *cli.Context) {
 
 	for _, cmd := range commands {
 		cmd = fmt.Sprintf(cmd, dock.Host())
+		if err := docker.ExecCmd(cmd, true); err != nil {
+			log.Error(err)
+		}
+	}
+
+	// Executing after scripts.
+	for _, cmd := range app.Config().AfterScript {
 		if err := docker.ExecCmd(cmd, true); err != nil {
 			log.Error(err)
 		}

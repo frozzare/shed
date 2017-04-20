@@ -1,6 +1,5 @@
-docker:
-  # build is required if the image should be rebuild if already build.
-  build: true
+# We can deploy to a docker-machine instead of local machine.
+# docker:
   # machine: shed.com
 
 # Setting a branch name will allow us to deploy without a git repository.
