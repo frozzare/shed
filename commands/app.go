@@ -5,6 +5,7 @@ import (
 
 	"github.com/frozzare/shed/app"
 	"github.com/frozzare/shed/config"
+	"github.com/frozzare/shed/log"
 	"github.com/frozzare/shed/repository"
 	cli "gopkg.in/urfave/cli.v1"
 )
@@ -13,11 +14,7 @@ var AppCmd = cli.Command{
 	Name:   "app",
 	Usage:  "app",
 	Action: ap,
-	Flags: []cli.Flag{
-		cli.BoolFlag{
-			Name: "debug",
-		},
-	},
+	Flags:  []cli.Flag{},
 }
 
 func load(c *cli.Context) (*app.App, error) {
@@ -43,8 +40,7 @@ func load(c *cli.Context) (*app.App, error) {
 func ap(c *cli.Context) {
 	app, err := load(c)
 	if err != nil {
-		rerr(c, err)
-		return
+		log.Error(err)
 	}
 
 	fmt.Printf("Branch: %s\n", app.Repository().Branch)

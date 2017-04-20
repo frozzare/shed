@@ -35,6 +35,7 @@ func ExecCmd(input string, output bool) error {
 	scanner := bufio.NewScanner(cmdReader)
 	r := regexp.MustCompile("^(?:export|)\\s*([^\\d+][\\w_]+)\\s?=\\s?(.+)")
 	go func() {
+		i := 0
 		for scanner.Scan() {
 			text := scanner.Text()
 			if r.MatchString(text) {
@@ -43,8 +44,18 @@ func ExecCmd(input string, output bool) error {
 					os.Setenv(s[1], strings.Trim(s[2], "\""))
 				}
 			} else if output {
+				if i == 0 {
+					fmt.Println()
+				}
+
 				fmt.Println("  " + scanner.Text())
+
+				i++
 			}
+		}
+
+		if i > 0 {
+			fmt.Println()
 		}
 	}()
 
