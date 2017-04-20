@@ -78,7 +78,7 @@ func (a *App) Domain() string {
 func (a *App) URL() string {
 	scheme := "http"
 	port := a.Config().Docker.Proxy.Ports.HTTP
-	if a.Config().HTTPS {
+	if len(a.Config().Docker.Proxy.Ports.HTTPS) > 0 {
 		scheme = "https"
 		port = a.Config().Docker.Proxy.Ports.HTTPS
 	}
