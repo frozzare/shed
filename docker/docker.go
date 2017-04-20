@@ -10,6 +10,10 @@ import (
 	api "github.com/fsouza/go-dockerclient"
 )
 
+var (
+	ErrLocalMachine = errors.New("running on local machine, no need to sync application files")
+)
+
 // Docker represents a docker client.
 type Docker struct {
 	client *api.Client
@@ -65,7 +69,7 @@ func NewDocker(config config.Docker) (*Docker, error) {
 // Sync application files with docker machine.
 func (d *Docker) Sync() error {
 	if len(d.config.Machine) == 0 {
-		return errors.New("running on local machine, no need to sync application files")
+		return ErrLocalMachine
 	}
 
 	cmd := fmt.Sprintf("docker-machine ssh %s -- rm -rf %s", d.config.Machine, os.Getenv("SHED_PATH"))
@@ -112,8 +116,8 @@ func (d *Docker) Prune() error {
 	return nil
 }
 
-// StartNginxContainer will start nginx proxy container.
-func (d *Docker) StartNginxContainer() error {
+// StartProxyContainer will start the proxy container.
+func (d *Docker) StartProxyContainer() error {
 	// Define image.
 	image := d.config.Proxy.Image
 	if len(image) == 0 {
@@ -130,11 +134,16 @@ func (d *Docker) StartNginxContainer() error {
 		ports = append(ports, d.config.Proxy.HTTPSPort)
 	}
 
+	volumes := []string{"/var/run/docker.sock:/tmp/docker.sock:ro"}
+	if len(d.config.Proxy.Volumes) > 0 {
+		volumes = d.config.Proxy.Volumes
+	}
+
 	return d.createContainer(&createContainerOptions{
-		Name:     "/shed_nginx_proxy",
+		Name:     "/shed_proxy",
 		Image:    image,
 		Recreate: true,
 		Ports:    ports,
-		Volumes:  []string{"/var/run/docker.sock:/tmp/docker.sock:ro"},
+		Volumes:  volumes,
 	})
 }

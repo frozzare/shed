@@ -45,17 +45,21 @@ func up(c *cli.Context) {
 		log.Info("docker: system pruned")
 	}
 
-	// Start nginx proxy container if it don't exists.
-	if err := dock.StartNginxContainer(); err != nil {
+	// Start proxy container if it don't exists.
+	if err := dock.StartProxyContainer(); err != nil {
 		log.Error(err)
 	} else {
-		log.Info("docker: nginx proxy container is created")
+		log.Info("docker: proxy container is created")
 	}
 
 	// Sync application files.
 	log.Info("docker: syncing files")
 	if err := dock.Sync(); err != nil {
-		log.Error(err)
+		if err == docker.ErrLocalMachine {
+			log.Error(err, false)
+		} else {
+			log.Error(err)
+		}
 	} else {
 		log.Info("docker: syncing done")
 	}

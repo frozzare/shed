@@ -21,9 +21,10 @@ type Docker struct {
 
 // DockerProxy represents a docker proxy config section.
 type DockerProxy struct {
-	Image     string `yaml:"image"`
-	HTTPPort  string `yaml:"http_port"`
-	HTTPSPort string `yaml:"https_port"`
+	Image     string   `yaml:"image"`
+	HTTPPort  string   `yaml:"http_port"`
+	HTTPSPort string   `yaml:"https_port"`
+	Volumes   []string `yaml:"volumes"`
 }
 
 // Git represents a git config section.
