@@ -30,7 +30,7 @@ func NewDocker(config config.Docker) (*Docker, error) {
 		// Set docker machine environment variables.
 		cmd := fmt.Sprintf("docker-machine env %s", config.Machine)
 		if err := ExecCmd(cmd, false); err != nil {
-			return nil, err
+			return nil, errors.New("docker machine host does not exist: " + config.Machine)
 		}
 
 		client, err = api.NewClientFromEnv()

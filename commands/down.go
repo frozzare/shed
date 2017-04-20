@@ -21,28 +21,28 @@ func down(c *cli.Context) {
 		log.Error(err)
 	}
 
-	fmt.Printf("==>    shed: destroying %s\n", app.Domain())
+	log.Info("shed: destroying %s", app.Domain())
 
 	// Connect to docker.
-	fmt.Println("==>  docker: connecting to docker")
+	log.Info("docker: connecting to docker")
 	dock, err := docker.NewDocker(app.Config().Docker)
 	if err != nil {
 		log.Error(err)
 	}
 
 	// Prune removes all unused containers, volumes, networks and images (both dangling and unreferenced).
-	fmt.Println("==>  docker: system pruning")
+	log.Info("docker: system pruning")
 	if err := dock.Prune(); err != nil {
-		log.Error(err)
+		log.Error(err, false)
 	} else {
-		fmt.Println("==>  docker: system pruned")
+		log.Info("docker: system pruned")
 	}
 
 	// Run docker-compose command.
 	cmd := fmt.Sprintf("docker-compose -H %s down -v", dock.Host())
 	if err := docker.ExecCmd(cmd, true); err != nil {
-		fmt.Printf("==> %s\n", err.Error())
+		log.Error(err)
 	}
 
-	fmt.Println("==>    shed: done")
+	log.Info("shed: done")
 }

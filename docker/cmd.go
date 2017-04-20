@@ -7,12 +7,14 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+
+	"github.com/frozzare/shed/log"
 )
 
 // ExecCmd will execute a input cmd string.
 func ExecCmd(input string, output bool) error {
 	if output {
-		fmt.Printf("==> running: %s\n", input)
+		log.Info("running: %s", input)
 	}
 
 	path, err := os.Getwd()

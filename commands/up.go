@@ -21,36 +21,36 @@ func up(c *cli.Context) {
 		log.Error(err)
 	}
 
-	fmt.Printf("==>    shed: creating %s\n", app.Domain())
+	log.Info("shed: creating %s", app.Domain())
 
 	// Connect to docker.
-	fmt.Println("==>  docker: connecting to docker")
+	log.Info("docker: connecting to docker")
 	dock, err := docker.NewDocker(app.Config().Docker)
 	if err != nil {
 		log.Error(err)
 	}
 
 	// Prune removes all unused containers, volumes, networks and images (both dangling and unreferenced).
-	fmt.Println("==>  docker: system pruning")
+	log.Info("docker: system pruning")
 	if err := dock.Prune(); err != nil {
-		log.Error(err)
+		log.Error(err, false)
 	} else {
-		fmt.Println("==>  docker: system pruned")
+		log.Info("docker: system pruned")
 	}
 
 	// Start nginx proxy container if it don't exists.
 	if err := dock.StartNginxContainer(); err != nil {
 		log.Error(err)
 	} else {
-		fmt.Println("==>  docker: nginx proxy container is created")
+		log.Info("docker: nginx proxy container is created")
 	}
 
 	// Sync application files.
-	fmt.Println("==>  docker: syncing files")
+	log.Info("docker: syncing files")
 	if err := dock.Sync(); err != nil {
 		log.Error(err)
 	} else {
-		fmt.Println("==>  docker: syncing done")
+		log.Info("docker: syncing done")
 	}
 
 	// Run docker-compose commands.
@@ -68,5 +68,5 @@ func up(c *cli.Context) {
 		}
 	}
 
-	fmt.Printf("==>    shed: done, %s is now up\n", app.URL())
+	log.Info("shed: done, %s is now up", app.URL())
 }
