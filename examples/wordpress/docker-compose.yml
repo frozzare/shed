@@ -4,7 +4,7 @@ web:
     - 80
   environment:
     WORDPRESS_DB_PASSWORD: example
-    VIRTUAL_HOST: ${SHED_DOMAIN}
+    VIRTUAL_HOST: ${SHED_HOST}
   links:
     - mysql
 

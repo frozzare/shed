@@ -8,4 +8,4 @@ web:
     - 80
   restart: always
   environment:
-    - VIRTUAL_HOST=${SHED_DOMAIN}
+    - VIRTUAL_HOST=${SHED_HOST}

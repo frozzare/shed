@@ -41,7 +41,7 @@ func NewApp(opts *Options) (*App, error) {
 
 // prepare prepares the application.
 func (a *App) prepare() {
-	os.Setenv("SHED_DOMAIN", a.Domain())
+	os.Setenv("SHED_HOST", a.Host())
 }
 
 // Config returns application config.
@@ -56,22 +56,22 @@ func (a *App) Repository() repository.Repository {
 	return a.opts.Repository
 }
 
-// Domain returns the application domain.
-func (a *App) Domain() string {
+// Host returns the application host.
+func (a *App) Host() string {
 	repo := a.Repository()
 
-	// Let's allow specific domains for different branches.
-	if len(a.opts.Config.Branches[repo.Branch].Domain) > 0 {
-		return a.opts.Config.Branches[repo.Branch].Domain
+	// Let's allow specific hosts for different branches.
+	if len(a.opts.Config.Branches[repo.Branch].Host) > 0 {
+		return a.opts.Config.Branches[repo.Branch].Host
 	}
 
 	// Add leading dot to domain name if missing.
-	domain := a.opts.Config.Domain
+	host := a.opts.Config.Host
 	if domain[0] != '.' {
-		domain = "." + domain
+		host = "." + host
 	}
 
-	return repo.Slug + domain
+	return repo.Slug + host
 }
 
 // URL returns the url to the application.
@@ -92,5 +92,5 @@ func (a *App) URL() string {
 		port = ":" + port
 	}
 
-	return fmt.Sprintf("%s://%s%s", scheme, a.Domain(), port)
+	return fmt.Sprintf("%s://%s%s", scheme, a.Host(), port)
 }

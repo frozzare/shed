@@ -4,4 +4,4 @@ web:
   expose:
     - 80
   environment:
-    - VIRTUAL_HOST=${SHED_DOMAIN}
+    - VIRTUAL_HOST=${SHED_HOST}

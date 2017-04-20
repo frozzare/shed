@@ -38,8 +38,8 @@ type Git struct {
 type Config struct {
 	Branches map[string]Config `yaml:"branches"`
 	Docker   Docker            `yaml:"docker"`
-	Domain   string            `yaml:"domain"`
 	Git      Git               `yaml:"git"`
+	Host     string            `yaml:"host"`
 }
 
 // NewConfig creates a new config struct from a yaml file.

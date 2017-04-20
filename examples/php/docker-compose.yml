@@ -7,4 +7,4 @@ web:
   volumes:
     - ${SHED_PATH}/www:/app
   environment:
-    - VIRTUAL_HOST=${SHED_DOMAIN}
+    - VIRTUAL_HOST=${SHED_HOST}

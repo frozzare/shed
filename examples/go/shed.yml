@@ -6,10 +6,10 @@
 git:
   branch: golang
 
-# Base domain that will be used for subdomain (branch name + domain, e.g: master.shed.dev)
-domain: shed.dev
+# Base host that will be used for subdomain (branch name + host, e.g: master.shed.dev)
+host: shed.dev
 
 # We can override any setting matching a branch name.
 # branches:
 #  master:
-#    domain: shed.dev
+#    host: shed.dev
