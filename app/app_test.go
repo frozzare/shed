@@ -18,12 +18,12 @@ func TestApp(t *testing.T) {
 func TestDomain(t *testing.T) {
 	app, _ := NewApp(&Options{
 		Config: config.Config{
-			Domain: "shed.io",
+			Host: "shed.io",
 		},
 		Repository: repository.Repository{
 			Slug: "master",
 		},
 	})
 
-	assert.Equal(t, app.Domain(), "master.shed.io")
+	assert.Equal(t, app.Host(), "master.shed.io")
 }

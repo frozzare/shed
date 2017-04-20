@@ -13,14 +13,14 @@ func TestConfig(t *testing.T) {
 	path, err := os.Getwd()
 	assert.Nil(t, err)
 
-	dat := `domain: example.com`
+	dat := `host: example.com`
 
 	err = ioutil.WriteFile(filepath.Join(path, "shed.yml"), []byte(dat), 0644)
 	assert.Nil(t, err)
 
 	config, err := NewConfig(path)
 	assert.Nil(t, err)
-	assert.Equal(t, config.Domain, "example.com")
+	assert.Equal(t, config.Host, "example.com")
 
 	os.Remove(filepath.Join(path, "shed.yml"))
 }
@@ -29,14 +29,14 @@ func TestCustomConfigFile(t *testing.T) {
 	path, err := os.Getwd()
 	assert.Nil(t, err)
 
-	dat := `domain: example.com`
+	dat := `host: example.com`
 
 	err = ioutil.WriteFile(filepath.Join(path, "shed-custom.yml"), []byte(dat), 0644)
 	assert.Nil(t, err)
 
 	config, err := NewConfig("shed-custom.yml")
 	assert.Nil(t, err)
-	assert.Equal(t, config.Domain, "example.com")
+	assert.Equal(t, config.Host, "example.com")
 
 	os.Remove(filepath.Join(path, "shed-custom.yml"))
 }
