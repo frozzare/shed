@@ -1,4 +1,4 @@
-package docker
+package exec
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/frozzare/go-assert"
 )
 
-func TestExecCmd(t *testing.T) {
+func TestCmd(t *testing.T) {
 	err := ExecCmd("ls", false)
 	assert.Nil(t, err)
 

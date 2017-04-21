@@ -1,9 +1,9 @@
 package commands
 
 import (
-	"fmt"
-
+	"github.com/frozzare/shed/config"
 	"github.com/frozzare/shed/docker"
+	"github.com/frozzare/shed/exec"
 	"github.com/frozzare/shed/log"
 	cli "gopkg.in/urfave/cli.v1"
 )
@@ -20,19 +20,16 @@ func up(c *cli.Context) {
 	if err != nil {
 		log.Error(err)
 	}
+	cfg := app.Config()
 
 	log.Info("shed: creating %s", app.Host())
 
 	// Executing before scripts.
-	for _, cmd := range app.Config().BeforeScript {
-		if err := docker.ExecCmd(cmd, true); err != nil {
-			log.Error(err)
-		}
-	}
+	exec.CmdList(cfg.BeforeScript, true)
 
 	// Connect to docker.
 	log.Info("docker: connecting to docker")
-	dock, err := docker.NewDocker(app.Config().Docker)
+	dock, err := docker.NewDocker(cfg.Docker)
 	if err != nil {
 		log.Error(err)
 	}
@@ -65,30 +62,16 @@ func up(c *cli.Context) {
 	}
 
 	// Run docker-compose commands.
-	commands := []string{
+	commands := config.DefList(cfg.Script, []string{
 		"docker-compose -H %s stop",
 		"docker-compose -H %s rm -f",
 		"docker-compose -H %s pull",
 		"docker-compose -H %s up --build -d",
-	}
-
-	if len(app.Config().Script) > 0 {
-		commands = app.Config().Script
-	}
-
-	for _, cmd := range commands {
-		cmd = fmt.Sprintf(cmd, dock.Host())
-		if err := docker.ExecCmd(cmd, true); err != nil {
-			log.Error(err)
-		}
-	}
+	})
+	exec.CmdList(commands, true)
 
 	// Executing after scripts.
-	for _, cmd := range app.Config().AfterScript {
-		if err := docker.ExecCmd(cmd, true); err != nil {
-			log.Error(err)
-		}
-	}
+	exec.CmdList(cfg.AfterScript, true)
 
 	log.Info("shed: done, %s is now up", app.URL())
 }

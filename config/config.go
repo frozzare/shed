@@ -100,3 +100,12 @@ func Def(a, b string) string {
 
 	return a
 }
+
+// DefList returns second parameter if first paramter length is zero.
+func DefList(a, b []string) []string {
+	if len(a) == 0 {
+		return b
+	}
+
+	return a
+}

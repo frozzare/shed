@@ -1,18 +1,18 @@
-package docker
+package exec
 
 import (
 	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
+	goexec "os/exec"
 	"regexp"
 	"strings"
 
 	"github.com/frozzare/shed/log"
 )
 
-// ExecCmd will execute a input cmd string.
-func ExecCmd(input string, output bool) error {
+// Cmd will execute a input cmd string.
+func Cmd(input string, output bool) error {
 	if output {
 		log.Info("running: %s", input)
 	}
@@ -26,7 +26,7 @@ func ExecCmd(input string, output bool) error {
 	head := parts[0]
 	parts = parts[1:len(parts)]
 
-	cmd := exec.Command(head, parts...)
+	cmd := goexec.Command(head, parts...)
 	cmd.Dir = path
 
 	cmdReader, err := cmd.StdoutPipe()
@@ -72,4 +72,13 @@ func ExecCmd(input string, output bool) error {
 	}
 
 	return nil
+}
+
+// CmdList executes a list of commands.
+func CmdList(cmds []string, output bool) {
+	for _, cmd := range cmds {
+		if err := Cmd(cmd, output); err != nil {
+			log.Error(err)
+		}
+	}
 }

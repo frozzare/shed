@@ -1,15 +1,14 @@
 package docker
 
 import (
-	"fmt"
-
+	"github.com/frozzare/shed/log"
 	api "github.com/fsouza/go-dockerclient"
 )
 
 // pullImage will pull a image if it don't exists.
 func (d *Docker) pullImage(image string) error {
 	if dockerImage, _ := d.client.InspectImage(image); dockerImage == nil {
-		fmt.Printf("==> pulling image %s from docker\n", image)
+		log.Info("docker: pulling image %s from docker", image)
 		if err := d.client.PullImage(api.PullImageOptions{
 			Repository: image,
 			Tag:        "latest",

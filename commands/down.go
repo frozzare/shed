@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/frozzare/shed/docker"
+	"github.com/frozzare/shed/exec"
 	"github.com/frozzare/shed/log"
 	cli "gopkg.in/urfave/cli.v1"
 )
@@ -40,7 +41,7 @@ func down(c *cli.Context) {
 
 	// Run docker-compose command.
 	cmd := fmt.Sprintf("docker-compose -H %s down -v", dock.Host())
-	if err := docker.ExecCmd(cmd, true); err != nil {
+	if err := exec.Cmd(cmd, true); err != nil {
 		log.Error(err)
 	}
 

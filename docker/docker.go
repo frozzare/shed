@@ -7,6 +7,7 @@ import (
 	"runtime"
 
 	"github.com/frozzare/shed/config"
+	"github.com/frozzare/shed/exec"
 	api "github.com/fsouza/go-dockerclient"
 )
 
@@ -33,7 +34,7 @@ func NewDocker(config config.Docker) (*Docker, error) {
 
 		// Set docker machine environment variables.
 		cmd := fmt.Sprintf("docker-machine env %s", config.Machine)
-		if err := ExecCmd(cmd, false); err != nil {
+		if err := exec.Cmd(cmd, false); err != nil {
 			return nil, errors.New("docker machine host does not exist: " + config.Machine)
 		}
 
@@ -73,17 +74,17 @@ func (d *Docker) Sync() error {
 	}
 
 	cmd := fmt.Sprintf("docker-machine ssh %s -- rm -rf %s", d.config.Machine, os.Getenv("SHED_PATH"))
-	if err := ExecCmd(cmd, true); err != nil {
+	if err := exec.Cmd(cmd, true); err != nil {
 		return err
 	}
 
 	cmd = fmt.Sprintf("docker-machine ssh %s -- mkdir -p %s", d.config.Machine, os.Getenv("SHED_PATH"))
-	if err := ExecCmd(cmd, true); err != nil {
+	if err := exec.Cmd(cmd, true); err != nil {
 		return err
 	}
 
 	cmd = fmt.Sprintf("docker-machine scp -r . %s:%s", d.config.Machine, os.Getenv("SHED_PATH"))
-	if err := ExecCmd(cmd, true); err != nil {
+	if err := exec.Cmd(cmd, true); err != nil {
 		return err
 	}
 
