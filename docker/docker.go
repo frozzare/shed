@@ -138,17 +138,11 @@ func (d *Docker) StartProxyContainer() error {
 		ports = append(ports, d.config.Proxy.HTTPSPort)
 	}
 
-	// Recreate nginx container by default.
-	recreate := true
-	if d.config.Proxy.Recreate != nil {
-		recreate = bool(*d.config.Proxy.Recreate)
-	}
-
 	return d.createContainer(&createContainerOptions{
 		Env:      d.config.Proxy.Env.Values,
 		Name:     "/shed_proxy",
 		Image:    image,
-		Recreate: recreate,
+		Recreate: d.config.Proxy.Recreate,
 		Ports:    ports,
 		Volumes:  config.DefList(d.config.Proxy.Volumes.Values, []string{"/var/run/docker.sock:/tmp/docker.sock:ro"}),
 	})

@@ -25,7 +25,7 @@ type DockerProxy struct {
 	Env       List   `yaml:"env"`
 	HTTPPort  string `yaml:"http_port"`
 	HTTPSPort string `yaml:"https_port"`
-	Recreate  *bool  `yaml:"recreate"`
+	Recreate  bool   `yaml:"recreate"`
 	Volumes   List   `yaml:"volumes"`
 }
 
