@@ -72,6 +72,10 @@ func up(c *cli.Context) {
 		"docker-compose -H %s up --build -d",
 	}
 
+	if len(app.Config().Script) > 0 {
+		commands = app.Config().Script
+	}
+
 	for _, cmd := range commands {
 		cmd = fmt.Sprintf(cmd, dock.Host())
 		if err := docker.ExecCmd(cmd, true); err != nil {

@@ -41,6 +41,7 @@ type Config struct {
 	Docker       Docker            `yaml:"docker"`
 	Git          Git               `yaml:"git"`
 	Host         string            `yaml:"host"`
+	Script       []string          `yaml:"script"`
 }
 
 // NewConfig creates a new config struct from a yaml file.
