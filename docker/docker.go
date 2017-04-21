@@ -53,6 +53,9 @@ func NewDocker(config config.Docker) (*Docker, error) {
 			host = "unix:///var/run/docker.sock"
 		}
 
+		// Set docker host environment variable so we can use it later.
+		os.Setenv("DOCKER_HOST", host)
+
 		client, err = api.NewClient(host)
 	}
 
