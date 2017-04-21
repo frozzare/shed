@@ -93,7 +93,7 @@ func NewConfig(args ...string) (Config, error) {
 	}
 
 	if config.HTTPS {
-		config.Docker.Proxy.HTTPSPort = "443:433"
+		config.Docker.Proxy.HTTPSPort = "443:443"
 	}
 
 	return config, nil

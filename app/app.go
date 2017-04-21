@@ -92,5 +92,9 @@ func (a *App) URL() string {
 		port = ":" + port
 	}
 
+	if port == "443" || port == "80" {
+		port = ""
+	}
+
 	return fmt.Sprintf("%s://%s%s", scheme, a.Host(), port)
 }
