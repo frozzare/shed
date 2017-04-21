@@ -22,8 +22,10 @@ type Docker struct {
 // DockerProxy represents a docker proxy config section.
 type DockerProxy struct {
 	Image     string `yaml:"image"`
+	Env       List   `yaml:"env"`
 	HTTPPort  string `yaml:"http_port"`
 	HTTPSPort string `yaml:"https_port"`
+	Recreate  *bool  `yaml:"recreate"`
 	Volumes   List   `yaml:"volumes"`
 }
 
@@ -41,6 +43,7 @@ type Config struct {
 	Docker       Docker            `yaml:"docker"`
 	Git          Git               `yaml:"git"`
 	Host         string            `yaml:"host"`
+	HTTPS        bool              `yaml:"https"`
 	Script       List              `yaml:"script"`
 }
 
@@ -87,6 +90,10 @@ func NewConfig(args ...string) (Config, error) {
 
 	if err := yaml.Unmarshal(dat, &config); err != nil {
 		return Config{}, err
+	}
+
+	if config.HTTPS {
+		config.Docker.Proxy.HTTPSPort = "443:433"
 	}
 
 	return config, nil

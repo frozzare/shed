@@ -12,6 +12,7 @@ import (
 )
 
 type createContainerOptions struct {
+	Env      []string
 	Recreate bool
 	IP       string
 	Image    string
@@ -41,6 +42,7 @@ func createOptions(opts *createContainerOptions) api.CreateContainerOptions {
 	options := api.CreateContainerOptions{
 		Name: opts.Name,
 		Config: &api.Config{
+			Env:     opts.Env,
 			Image:   opts.Image,
 			Volumes: map[string]struct{}{},
 		},
