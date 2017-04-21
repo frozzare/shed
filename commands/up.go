@@ -25,7 +25,7 @@ func up(c *cli.Context) {
 	log.Info("shed: creating %s", app.Host())
 
 	// Executing before scripts.
-	exec.CmdList(cfg.BeforeScript, true)
+	exec.CmdList(cfg.BeforeScript.Values, true)
 
 	// Connect to docker.
 	log.Info("docker: connecting to docker")
@@ -62,7 +62,7 @@ func up(c *cli.Context) {
 	}
 
 	// Run docker-compose commands.
-	commands := config.DefList(cfg.Script, []string{
+	commands := config.DefList(cfg.Script.Values, []string{
 		"docker-compose -H %s stop",
 		"docker-compose -H %s rm -f",
 		"docker-compose -H %s pull",
@@ -71,7 +71,7 @@ func up(c *cli.Context) {
 	exec.CmdList(commands, true)
 
 	// Executing after scripts.
-	exec.CmdList(cfg.AfterScript, true)
+	exec.CmdList(cfg.AfterScript.Values, true)
 
 	log.Info("shed: done, %s is now up", app.URL())
 }

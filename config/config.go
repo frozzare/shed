@@ -21,10 +21,10 @@ type Docker struct {
 
 // DockerProxy represents a docker proxy config section.
 type DockerProxy struct {
-	Image     string   `yaml:"image"`
-	HTTPPort  string   `yaml:"http_port"`
-	HTTPSPort string   `yaml:"https_port"`
-	Volumes   []string `yaml:"volumes"`
+	Image     string `yaml:"image"`
+	HTTPPort  string `yaml:"http_port"`
+	HTTPSPort string `yaml:"https_port"`
+	Volumes   List   `yaml:"volumes"`
 }
 
 // Git represents a git config section.
@@ -35,13 +35,13 @@ type Git struct {
 
 // Config represents a config file.
 type Config struct {
-	AfterScript  []string          `yaml:"after_script"`
-	BeforeScript []string          `yaml:"before_script"`
+	AfterScript  List              `yaml:"after_script"`
+	BeforeScript List              `yaml:"before_script"`
 	Branches     map[string]Config `yaml:"branches"`
 	Docker       Docker            `yaml:"docker"`
 	Git          Git               `yaml:"git"`
 	Host         string            `yaml:"host"`
-	Script       []string          `yaml:"script"`
+	Script       List              `yaml:"script"`
 }
 
 // NewConfig creates a new config struct from a yaml file.

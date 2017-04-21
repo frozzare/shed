@@ -135,16 +135,11 @@ func (d *Docker) StartProxyContainer() error {
 		ports = append(ports, d.config.Proxy.HTTPSPort)
 	}
 
-	volumes := []string{"/var/run/docker.sock:/tmp/docker.sock:ro"}
-	if len(d.config.Proxy.Volumes) > 0 {
-		volumes = d.config.Proxy.Volumes
-	}
-
 	return d.createContainer(&createContainerOptions{
 		Name:     "/shed_proxy",
 		Image:    image,
 		Recreate: true,
 		Ports:    ports,
-		Volumes:  volumes,
+		Volumes:  config.DefList(d.config.Proxy.Volumes.Values, []string{"/var/run/docker.sock:/tmp/docker.sock:ro"}),
 	})
 }
