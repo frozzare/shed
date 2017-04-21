@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"fmt"
+
 	"github.com/frozzare/shed/config"
 	"github.com/frozzare/shed/docker"
 	"github.com/frozzare/shed/exec"
@@ -63,10 +65,10 @@ func up(c *cli.Context) {
 
 	// Run docker-compose commands.
 	commands := config.DefList(cfg.Script.Values, []string{
-		"docker-compose -H %s stop",
-		"docker-compose -H %s rm -f",
-		"docker-compose -H %s pull",
-		"docker-compose -H %s up --build -d",
+		fmt.Sprintf("docker-compose -H %s stop", dock.Host()),
+		fmt.Sprintf("docker-compose -H %s rm -f", dock.Host()),
+		fmt.Sprintf("docker-compose -H %s pull", dock.Host()),
+		fmt.Sprintf("docker-compose -H %s up --build -d", dock.Host()),
 	})
 	exec.CmdList(commands, true)
 
