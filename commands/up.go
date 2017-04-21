@@ -48,7 +48,7 @@ func up(c *cli.Context) {
 	if err := dock.StartProxyContainer(); err != nil {
 		log.Error(err)
 	} else {
-		log.Info("docker: proxy container is created")
+		log.Info("docker: proxy container is up")
 	}
 
 	// Sync application files.
