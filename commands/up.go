@@ -12,7 +12,7 @@ import (
 
 var UpCmd = cli.Command{
 	Name:   "up",
-	Usage:  "up",
+	Usage:  "Create and start containers",
 	Action: up,
 	Flags:  []cli.Flag{},
 }

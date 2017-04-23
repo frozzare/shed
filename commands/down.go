@@ -11,7 +11,7 @@ import (
 
 var DownCmd = cli.Command{
 	Name:   "down",
-	Usage:  "down",
+	Usage:  "Stop and remove containers, networks, images, and volumes",
 	Action: down,
 	Flags:  []cli.Flag{},
 }

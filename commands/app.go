@@ -12,7 +12,7 @@ import (
 
 var AppCmd = cli.Command{
 	Name:   "app",
-	Usage:  "app",
+	Usage:  "Shows information about the shed application",
 	Action: ap,
 	Flags:  []cli.Flag{},
 }
