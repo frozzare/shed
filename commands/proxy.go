@@ -15,7 +15,43 @@ var ProxyCmd = cli.Command{
 			Usage:  "Stop and remove proxy container",
 			Action: proxyDown,
 		},
+		cli.Command{
+			Name:   "up",
+			Usage:  "Create proxy container if not created",
+			Action: proxyUp,
+		},
 	},
+}
+
+func proxyUp(c *cli.Context) {
+	app, err := load(c)
+	if err != nil {
+		log.Error(err)
+	}
+
+	log.Info("shed: creating proxy container")
+
+	// Connect to docker.
+	log.Info("docker: connecting to docker")
+	dock, err := docker.NewDocker(app.Config().Docker)
+	if err != nil {
+		log.Error(err)
+	}
+
+	// Prune removes all unused containers, volumes, networks and images (both dangling and unreferenced).
+	log.Info("docker: system pruning")
+	if err := dock.Prune(); err != nil {
+		log.Error(err, false)
+	} else {
+		log.Info("docker: system pruned")
+	}
+
+	// Start proxy container if it don't exists.
+	if err := dock.StartProxyContainer(); err != nil {
+		log.Error(err)
+	}
+
+	log.Info("shed: proxy container is up")
 }
 
 func proxyDown(c *cli.Context) {
@@ -26,6 +62,8 @@ func proxyDown(c *cli.Context) {
 
 	log.Info("shed: destroying proxy container")
 
+	// Connect to docker.
+	log.Info("docker: connecting to docker")
 	dock, err := docker.NewDocker(app.Config().Docker)
 	if err != nil {
 		log.Error(err)
@@ -35,5 +73,5 @@ func proxyDown(c *cli.Context) {
 		log.Error(err)
 	}
 
-	log.Info("shed: proxy container is destroyed")
+	log.Info("shed: proxy container is down")
 }

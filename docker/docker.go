@@ -148,7 +148,7 @@ func (d *Docker) StartProxyContainer() error {
 		Volumes:  config.DefList(d.config.Proxy.Volumes.Values, []string{"/var/run/docker.sock:/tmp/docker.sock:ro"}),
 	})
 
-	if strings.Contains(err.Error(), "container already exists") {
+	if err != nil && strings.Contains(err.Error(), "container already exists") {
 		return nil
 	}
 
