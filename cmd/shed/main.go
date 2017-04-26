@@ -22,6 +22,7 @@ func main() {
 	app.Commands = []cli.Command{
 		commands.AppCmd,
 		commands.DownCmd,
+		commands.ProxyCmd,
 		commands.UpCmd,
 	}
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/frozzare/shed/config"
 	"github.com/frozzare/shed/exec"
@@ -138,7 +139,7 @@ func (d *Docker) StartProxyContainer() error {
 		ports = append(ports, d.config.Proxy.HTTPSPort)
 	}
 
-	return d.createContainer(&createContainerOptions{
+	err := d.createContainer(&createContainerOptions{
 		Env:      d.config.Proxy.Env.Values,
 		Name:     "/shed_proxy",
 		Image:    image,
@@ -146,4 +147,20 @@ func (d *Docker) StartProxyContainer() error {
 		Ports:    ports,
 		Volumes:  config.DefList(d.config.Proxy.Volumes.Values, []string{"/var/run/docker.sock:/tmp/docker.sock:ro"}),
 	})
+
+	if strings.Contains(err.Error(), "container already exists") {
+		return nil
+	}
+
+	return err
+}
+
+func (d *Docker) RemoveContainer(name string) error {
+	container, err := d.findContainer(name)
+
+	if err != nil {
+		return err
+	}
+
+	return d.removeContainer(container)
 }

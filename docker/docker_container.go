@@ -77,6 +77,45 @@ func createOptions(opts *createContainerOptions) api.CreateContainerOptions {
 	return options
 }
 
+// findContainer will find a container with a name.
+func (d *Docker) findContainer(name string) (*api.Container, error) {
+	containers, err := d.client.ListContainers(api.ListContainersOptions{
+		All: true,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	containerName := name
+	if containerName[0] != '/' {
+		containerName = "/" + containerName
+	}
+
+	for _, container := range containers {
+		found := false
+		for _, name := range container.Names {
+			if name == containerName {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			continue
+		}
+
+		container, err := d.client.InspectContainer(container.ID)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to inspect container %s: %s", container.ID, err)
+		}
+
+		return container, nil
+	}
+
+	return nil, nil
+}
+
 // createContainer will create a container with the given options.
 func (d *Docker) createContainer(opts *createContainerOptions) error {
 	// Check if image exists or pull it.
@@ -89,43 +128,16 @@ CREATE:
 	if err != nil {
 		// Try to destroy the container if it exists and should be recreated.
 		if strings.Contains(err.Error(), "container already exists") && opts.Recreate {
-			containers, err := d.client.ListContainers(api.ListContainersOptions{
-				All: true,
-			})
-
+			container, err := d.findContainer(opts.Name)
 			if err != nil {
 				return err
 			}
 
-			containerName := opts.Name
-			if opts.Name[0] != '/' {
-				containerName = "/" + containerName
+			if err := d.removeContainer(container); err != nil {
+				return err
 			}
 
-			for _, container := range containers {
-				found := false
-				for _, name := range container.Names {
-					if name == containerName {
-						found = true
-						break
-					}
-				}
-
-				if !found {
-					continue
-				}
-
-				container, err := d.client.InspectContainer(container.ID)
-				if err != nil {
-					return fmt.Errorf("Failed to inspect container %s: %s", container.ID, err)
-				}
-
-				if err := d.removeContainer(container); err != nil {
-					return err
-				}
-
-				goto CREATE
-			}
+			goto CREATE
 		}
 
 		return err
@@ -179,6 +191,11 @@ STOP:
 
 // removeContainer will remove the container or try to remove the container five times before it stops.
 func (d *Docker) removeContainer(container *api.Container) error {
+	// No need to remove nil container.
+	if container == nil {
+		return nil
+	}
+
 	attempted := 0
 REMOVE:
 	if err := d.client.RemoveContainer(api.RemoveContainerOptions{
