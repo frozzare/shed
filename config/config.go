@@ -17,6 +17,7 @@ var (
 type Docker struct {
 	Machine string      `yaml:"machine"`
 	Proxy   DockerProxy `yaml:"proxy"`
+	Volumes List        `yaml:"volumes"`
 }
 
 // DockerProxy represents a docker proxy config section.

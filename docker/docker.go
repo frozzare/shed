@@ -77,19 +77,34 @@ func (d *Docker) Sync() error {
 		return ErrLocalMachine
 	}
 
-	cmd := fmt.Sprintf("docker-machine ssh %s -- rm -rf %s", d.config.Machine, os.Getenv("SHED_PATH"))
-	if err := exec.Cmd(cmd, true); err != nil {
-		return err
+	volumes := map[string]string{
+		".": os.Getenv("SHED_PATH"),
 	}
 
-	cmd = fmt.Sprintf("docker-machine ssh %s -- mkdir -p %s", d.config.Machine, os.Getenv("SHED_PATH"))
-	if err := exec.Cmd(cmd, true); err != nil {
-		return err
+	for _, row := range d.config.Volumes.Values {
+		p := strings.Split(row, ":")
+
+		if len(p) != 2 {
+			continue
+		}
+
+		if p[1] == "/" {
+			continue
+		}
+
+		volumes[p[0]] = p[1]
 	}
 
-	cmd = fmt.Sprintf("docker-machine scp -r . %s:%s", d.config.Machine, os.Getenv("SHED_PATH"))
-	if err := exec.Cmd(cmd, true); err != nil {
-		return err
+	for host, remote := range volumes {
+		cmd := fmt.Sprintf("docker-machine ssh %s -- rm -rf %s", d.config.Machine, remote)
+		if err := exec.Cmd(cmd, true); err != nil {
+			return err
+		}
+
+		cmd = fmt.Sprintf("docker-machine scp -r %s %s:%s", host, d.config.Machine, remote)
+		if err := exec.Cmd(cmd, true); err != nil {
+			return err
+		}
 	}
 
 	return nil
