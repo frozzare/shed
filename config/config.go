@@ -57,6 +57,7 @@ func NewConfig(args ...string) (Config, error) {
 	if len(args) > 0 && args[0] != "" {
 		if _, err := os.Stat(args[0]); err == nil {
 			file = args[0]
+			path = path = filepath.Dir(file)
 		} else {
 			path = args[0]
 		}
