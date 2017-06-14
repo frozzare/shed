@@ -13,7 +13,7 @@ var (
 	spaces = 7
 )
 
-// Error outputs a error row and exits with code 1 if no second bool paramter is provided.
+// Error outputs a error row and exits with code 1 if no second bool parameter is provided.
 func Error(err error, exit ...bool) {
 	red := color.New(color.FgRed).SprintFunc()
 	msg := space(fmt.Sprintf("error: %s", err.Error()))

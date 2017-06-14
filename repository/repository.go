@@ -22,7 +22,7 @@ type Repository struct {
 	Slug   string
 }
 
-// NewRepository creates a new repostiory.
+// NewRepository creates a new repository.
 func NewRepository(config config.Git) (Repository, error) {
 	var err error
 	var path string
@@ -75,7 +75,7 @@ func NewRepository(config config.Git) (Repository, error) {
 	return NewRepositoryFromBranch(branch), nil
 }
 
-// NewRepositoryFromBranch creates a new repostiory from branch name.
+// NewRepositoryFromBranch creates a new repository from branch name.
 func NewRepositoryFromBranch(branch string) Repository {
 	return Repository{
 		Branch: branch,
