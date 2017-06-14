@@ -10,12 +10,12 @@ var ProxyCmd = cli.Command{
 	Name:  "proxy",
 	Usage: "",
 	Subcommands: []cli.Command{
-		cli.Command{
+		{
 			Name:   "down",
 			Usage:  "Stop and remove proxy container",
 			Action: proxyDown,
 		},
-		cli.Command{
+		{
 			Name:   "up",
 			Usage:  "Create proxy container if not created",
 			Action: proxyUp,

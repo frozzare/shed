@@ -35,8 +35,8 @@ func createOptions(opts *createContainerOptions) api.CreateContainerOptions {
 
 		containerPort := api.Port(parts[1])
 
-		publishedPorts[containerPort+"/tcp"] = []api.PortBinding{api.PortBinding{HostIP: ip, HostPort: parts[0]}}
-		publishedPorts[containerPort+"/udp"] = []api.PortBinding{api.PortBinding{HostIP: ip, HostPort: parts[0]}}
+		publishedPorts[containerPort+"/tcp"] = []api.PortBinding{{HostIP: ip, HostPort: parts[0]}}
+		publishedPorts[containerPort+"/udp"] = []api.PortBinding{{HostIP: ip, HostPort: parts[0]}}
 	}
 
 	options := api.CreateContainerOptions{
