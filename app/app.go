@@ -60,9 +60,11 @@ func (a *App) Repository() repository.Repository {
 func (a *App) Host() string {
 	repo := a.Repository()
 
-	// Let's allow specific hosts for different branches.
-	if len(a.opts.Config.Branches[repo.Branch].Host) > 0 {
-		return a.opts.Config.Branches[repo.Branch].Host
+	for _, name := range []string{repo.Branch, "*"} {
+		// Let's allow specific hosts for different branches.
+		if len(a.opts.Config.Branches[name].Host) > 0 {
+			return a.opts.Config.Branches[name].Host
+		}
 	}
 
 	// Add leading dot to host name if missing.
