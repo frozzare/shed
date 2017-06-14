@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -61,7 +62,9 @@ func NewConfig(args ...string) (Config, error) {
 		} else {
 			path = args[0]
 		}
-	} else {
+	}
+
+	if !strings.HasPrefix("/", path) {
 		path, err = os.Getwd()
 	}
 
