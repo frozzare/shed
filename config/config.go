@@ -101,7 +101,7 @@ func NewConfig(args ...string) (Config, error) {
 	return config, nil
 }
 
-// Def returns second parameter if first paramter length is zero.
+// Def returns second parameter if first parameter length is zero.
 func Def(a, b string) string {
 	if len(a) == 0 {
 		return b
@@ -110,7 +110,7 @@ func Def(a, b string) string {
 	return a
 }
 
-// DefList returns second parameter if first paramter length is zero.
+// DefList returns second parameter if first parameter length is zero.
 func DefList(a, b []string) []string {
 	if len(a) == 0 {
 		return b
