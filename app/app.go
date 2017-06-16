@@ -98,5 +98,10 @@ func (a *App) URL() string {
 		port = ""
 	}
 
-	return fmt.Sprintf("%s://%s%s", scheme, a.Host(), port)
+	hosts := strings.Split(a.Host(), ",")
+	for i, host := range hosts {
+		hosts[i] = fmt.Sprintf("%s://%s%s", scheme, strings.TrimSpace(host), port)
+	}
+
+	return strings.Join(hosts, ", ")
 }
