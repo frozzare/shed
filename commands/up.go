@@ -13,11 +13,11 @@ import (
 var UpCmd = cli.Command{
 	Name:   "up",
 	Usage:  "Create and start containers",
-	Action: up,
+	Action: upAction,
 	Flags:  []cli.Flag{},
 }
 
-func up(c *cli.Context) {
+func upAction(c *cli.Context) {
 	app, err := load(c)
 	if err != nil {
 		log.Error(err)

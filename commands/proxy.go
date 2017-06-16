@@ -13,17 +13,17 @@ var ProxyCmd = cli.Command{
 		{
 			Name:   "down",
 			Usage:  "Stop and remove proxy container",
-			Action: proxyDown,
+			Action: proxyDownAction,
 		},
 		{
 			Name:   "up",
 			Usage:  "Create proxy container if not created",
-			Action: proxyUp,
+			Action: proxyUpAction,
 		},
 	},
 }
 
-func proxyUp(c *cli.Context) {
+func proxyUpAction(c *cli.Context) {
 	app, err := load(c)
 	if err != nil {
 		log.Error(err)
@@ -54,7 +54,7 @@ func proxyUp(c *cli.Context) {
 	log.Info("shed: proxy container is up")
 }
 
-func proxyDown(c *cli.Context) {
+func proxyDownAction(c *cli.Context) {
 	app, err := load(c)
 	if err != nil {
 		log.Error(err)

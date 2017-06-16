@@ -12,11 +12,11 @@ import (
 var DownCmd = cli.Command{
 	Name:   "down",
 	Usage:  "Stop and remove containers, networks, images, and volumes",
-	Action: down,
+	Action: downAction,
 	Flags:  []cli.Flag{},
 }
 
-func down(c *cli.Context) {
+func downAction(c *cli.Context) {
 	app, err := load(c)
 	if err != nil {
 		log.Error(err)

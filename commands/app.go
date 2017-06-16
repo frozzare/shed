@@ -13,7 +13,7 @@ import (
 var AppCmd = cli.Command{
 	Name:   "app",
 	Usage:  "Shows information about the shed application",
-	Action: ap,
+	Action: appAction,
 	Flags:  []cli.Flag{},
 }
 
@@ -37,7 +37,7 @@ func load(c *cli.Context) (*app.App, error) {
 	})
 }
 
-func ap(c *cli.Context) {
+func appAction(c *cli.Context) {
 	app, err := load(c)
 	if err != nil {
 		log.Error(err)
